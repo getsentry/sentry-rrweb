@@ -17,12 +17,21 @@ export default class SentryRRWeb {
   private readonly checkoutEveryNms: number;
   private readonly checkoutEveryNth: number;
 
+  // defaults to true
+  private readonly maskAllInputs: boolean;
+
   public constructor(
-    options: { checkoutEveryNms?: number; checkoutEveryNth?: number } = {}
+    options: {
+      checkoutEveryNms?: number;
+      checkoutEveryNth?: number;
+      maskAllInputs?: boolean;
+    } = {}
   ) {
     // default checkout time of 5 minutes
     this.checkoutEveryNms = options.checkoutEveryNms || 5 * 60 * 1000;
     this.checkoutEveryNth = options.checkoutEveryNth;
+    this.maskAllInputs =
+      options.maskAllInputs !== undefined ? options.maskAllInputs : true;
   }
 
   public attachmentUrlFromDsn(dsn: Dsn, eventId: string) {
@@ -36,6 +45,7 @@ export default class SentryRRWeb {
     rrweb.record({
       checkoutEveryNms: this.checkoutEveryNms,
       checkoutEveryNth: this.checkoutEveryNth,
+      maskAllInputs: this.maskAllInputs,
       emit(event: RRWebEvent, isCheckout?: boolean) {
         const self = Sentry.getCurrentHub().getIntegration(SentryRRWeb);
         if (isCheckout) {
@@ -43,7 +53,7 @@ export default class SentryRRWeb {
         } else {
           self.events.push(event);
         }
-      }
+      },
     });
 
     Sentry.addGlobalEventProcessor((event: Event) => {
@@ -61,14 +71,14 @@ export default class SentryRRWeb {
         formData.append(
           'rrweb',
           new Blob([JSON.stringify({ events: self.events })], {
-            type: 'application/json'
+            type: 'application/json',
           }),
           'rrweb.json'
         );
         fetch(endpoint, {
           method: 'POST',
-          body: formData
-        }).catch(ex => {
+          body: formData,
+        }).catch((ex) => {
           // we have to catch this otherwise it throws an infinite loop in Sentry
           console.error(ex);
         });
