@@ -55,7 +55,8 @@ Sentry.init({
       checkoutEveryNth: 100,
       // default is 5 minutes
       checkoutEveryNms: 15 * 60 * 1000,
-      maskAllInputs: true,
+      // on by default
+      maskAllInputs: false,
     }),
   ],
   // ...
