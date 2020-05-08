@@ -21,11 +21,15 @@ export default class SentryRRWeb {
   private readonly maskAllInputs: boolean;
 
   public constructor(
-    options: {
+    {
+      checkoutEveryNms,
+      checkoutEveryNth,
+      maskAllInputs = true
+    }: {
       checkoutEveryNms?: number;
       checkoutEveryNth?: number;
       maskAllInputs?: boolean;
-    } = {}
+    }
   ) {
     // default checkout time of 5 minutes
     this.checkoutEveryNms = options.checkoutEveryNms || 5 * 60 * 1000;
