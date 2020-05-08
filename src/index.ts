@@ -20,22 +20,19 @@ export default class SentryRRWeb {
   // defaults to true
   private readonly maskAllInputs: boolean;
 
-  public constructor(
-    {
-      checkoutEveryNms,
-      checkoutEveryNth,
-      maskAllInputs = true
-    }: {
-      checkoutEveryNms?: number;
-      checkoutEveryNth?: number;
-      maskAllInputs?: boolean;
-    }
-  ) {
+  public constructor({
+    checkoutEveryNms,
+    checkoutEveryNth,
+    maskAllInputs = true,
+  }: {
+    checkoutEveryNms?: number;
+    checkoutEveryNth?: number;
+    maskAllInputs?: boolean;
+  }) {
     // default checkout time of 5 minutes
-    this.checkoutEveryNms = options.checkoutEveryNms || 5 * 60 * 1000;
-    this.checkoutEveryNth = options.checkoutEveryNth;
-    this.maskAllInputs =
-      options.maskAllInputs !== undefined ? options.maskAllInputs : true;
+    this.checkoutEveryNms = checkoutEveryNms || 5 * 60 * 1000;
+    this.checkoutEveryNth = checkoutEveryNth;
+    this.maskAllInputs = maskAllInputs;
   }
 
   public attachmentUrlFromDsn(dsn: Dsn, eventId: string) {
