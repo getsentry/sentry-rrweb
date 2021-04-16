@@ -16,7 +16,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
