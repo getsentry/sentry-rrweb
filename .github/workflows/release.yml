@@ -28,13 +28,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json', 'package-lock.json') }}
 
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-      - run: yarn test
-      - run: yarn build
-      - run: yarn pack
-
       - name: Prepare release
         uses: getsentry/action-prepare-release@v1
         env:
