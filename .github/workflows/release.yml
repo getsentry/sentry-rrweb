@@ -30,10 +30,10 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: npm pack
+        run: yarn install --frozen-lockfile
+      - run: yarn test
+      - run: yarn build
+      - run: yarn pack
 
       - name: Prepare release
         uses: getsentry/action-prepare-release@v1

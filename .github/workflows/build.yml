@@ -19,10 +19,10 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('package.json', 'package-lock.json') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-      - run: npm test
-      - run: npm build
-      - run: npm pack
+        run: yarn install --frozen-lockfile
+      - run: yarn test
+      - run: yarn build
+      - run: yarn pack
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ github.sha }}
