@@ -15,6 +15,7 @@ export default class SentryRRWeb {
   public readonly name: string = SentryRRWeb.id;
   public static id: string = 'SentryRRWeb';
 
+  public previousEvents: Array<RRWebEvent> = [];
   public events: Array<RRWebEvent> = [];
 
   private readonly recordOptions: RRWebOptions;
@@ -30,12 +31,14 @@ export default class SentryRRWeb {
       maskAllInputs,
       ...recordOptions,
     }
+    this.previousEvents = [];
     this.events = [];
 
     record({
       ...this.recordOptions,
       emit: (event: RRWebEvent, isCheckout?: boolean) => {
         if (isCheckout) {
+          this.previousEvents = this.events;
           this.events = [event];
         } else {
           this.events.push(event);
@@ -66,7 +69,7 @@ export default class SentryRRWeb {
         const formData = new FormData();
         formData.append(
           'rrweb',
-          new Blob([JSON.stringify({ events: self.events })], {
+          new Blob([JSON.stringify({ events: self.previousEvents.concat(self.events) })], {
             type: 'application/json',
           }),
           'rrweb.json'
