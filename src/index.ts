@@ -44,6 +44,10 @@ export default class SentryRRWeb {
     });
   }
 
+  public setupOnce() {
+    Sentry.addGlobalEventProcessor((event: Event) => this.processEvent(event));
+  }
+
   public attachmentUrlFromDsn(dsn: Dsn, eventId: string) {
     const { host, path, projectId, port, protocol, user } = dsn;
     return `${protocol}://${host}${port !== '' ? `:${port}` : ''}${
@@ -81,9 +85,5 @@ export default class SentryRRWeb {
     } catch (ex) {
       console.error(ex);
     }
-  }
-
-  public setupOnce() {
-    Sentry.addGlobalEventProcessor((event: Event) => this.processEvent(event));
   }
 }
