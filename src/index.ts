@@ -1,6 +1,6 @@
 import { record, EventType } from 'rrweb';
 import * as Sentry from '@sentry/browser';
-import { Dsn, Event } from '@sentry/types';
+import { Event } from '@sentry/types';
 
 type RRWebEvent = {
   type: EventType;
@@ -29,7 +29,7 @@ export default class SentryRRWeb {
       checkoutEveryNms,
       maskAllInputs,
       ...recordOptions,
-    }
+    };
     this.events = [];
 
     record({
@@ -48,11 +48,17 @@ export default class SentryRRWeb {
     Sentry.addGlobalEventProcessor((event: Event) => this.processEvent(event));
   }
 
-  public attachmentUrlFromDsn(dsn: Dsn, eventId: string) {
-    const { host, path, projectId, port, protocol, user } = dsn;
+  // In version 6.10 of the JS SDK, `dsn.publicKey` was introduced to replace
+  // `dsn.user`, and in version 7.0.0, `dsn.user` was removed. Further, 7.0.0
+  // removed the `Dsn` type in favor of the `DsnComponents` type. Since for now
+  // our peer dependency is marked as >=4.0.0, we type `dsn` as `any` and look
+  // for both properties, to cover our bases as much as possible.
+  public attachmentUrlFromDsn(dsn: any, eventId: string) {
+    const { host, path, projectId, port, protocol } = dsn;
+    const publicKey = dsn.publicKey || dsn.user;
     return `${protocol}://${host}${port !== '' ? `:${port}` : ''}${
       path !== '' ? `/${path}` : ''
-    }/api/${projectId}/events/${eventId}/attachments/?sentry_key=${user}&sentry_version=7&sentry_client=rrweb`;
+    }/api/${projectId}/events/${eventId}/attachments/?sentry_key=${publicKey}&sentry_version=7&sentry_client=rrweb`;
   }
 
   protected processEvent(event: Event) {
