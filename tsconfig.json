@@ -3,6 +3,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "module": "es6",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "outDir": "./dist",
