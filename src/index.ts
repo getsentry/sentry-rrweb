@@ -67,6 +67,7 @@ export default class SentryRRWeb {
     try {
       // short circuit if theres no events to replay
       if (!this.events.length) return;
+      if (this.recordOptions['errorsOnly'] && event.type !== 'error') return;
       const client = Sentry.getCurrentHub().getClient();
       const endpoint = self.attachmentUrlFromDsn(
         client.getDsn(),
