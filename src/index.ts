@@ -9,7 +9,7 @@ type RRWebEvent = {
   delay?: number;
 };
 
-type RRWebOptions = Parameters<typeof record>[0];
+type RRWebOptions = Parameters<typeof record>[0] & { errorsOnly?: boolean; };
 
 export default class SentryRRWeb {
   public readonly name: string = SentryRRWeb.id;
@@ -67,7 +67,7 @@ export default class SentryRRWeb {
     try {
       // short circuit if theres no events to replay
       if (!this.events.length) return;
-      if (this.recordOptions['errorsOnly'] && event.type !== 'error') return;
+      if (this.recordOptions['errorsOnly'] && event.type === 'transaction') return;
       const client = Sentry.getCurrentHub().getClient();
       const endpoint = self.attachmentUrlFromDsn(
         client.getDsn(),
