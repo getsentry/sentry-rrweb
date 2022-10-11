@@ -57,10 +57,12 @@ Sentry.init({
       checkoutEveryNms: 15 * 60 * 1000,
       // on by default
       maskAllInputs: false,
+      // don't attach recordings to transactions
+      errorsOnly: true,
     }),
   ],
   // ...
 });
 ```
 
-See the rrweb documentation for advice on configuring these values.
+See the rrweb documentation for advice on configuring these values. `errorsOnly` is a Sentry-specific configuration paremeter that ensures recording will only be attached if an error happened.
