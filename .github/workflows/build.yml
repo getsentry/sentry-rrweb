@@ -24,7 +24,7 @@ jobs:
       - run: yarn test
       - run: yarn build
       - run: yarn pack
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ github.sha }}
           path: |
